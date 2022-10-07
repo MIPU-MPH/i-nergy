@@ -1,0 +1,10 @@
+{
+    "api_version": "1",
+    "port" : "8889",
+    "PROT" : "https",
+    "HOST" : "training.rebecca.mipu.eu",
+    "API_PREDICT" : "api/targeting/multiai/v1/predictive_model/predict/",
+    "USER_REBECCA" : "api_user",  
+    "PWD_REBECCA" : "platoon#2022"  
+
+}
