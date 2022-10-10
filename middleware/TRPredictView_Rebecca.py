@@ -15,9 +15,6 @@ from tornado_http_auth import auth_required
 from pvlib.location import Location
 import pandas as pd
 from ConfigParam import ConfigParam
-from modello.funzioni2 import train_predict
-from modello.funzioni2 import dizionario_modelli
-from modello.funzioni2 import tabella
 
 #Verificare come rendere parametrici in un file
 PROT = "https"
@@ -132,7 +129,6 @@ class TRPredictView(BaseView):
             self.send_error()
             return False
 
-#APi Post per train + predizione, tramite modello interno
     @auth_required(realm='Protected', auth_func=credentials.get)    
     def _post(self, *args, **kwargs):
         logger.info('Hello %s' % self._current_user)
@@ -140,52 +136,91 @@ class TRPredictView(BaseView):
         try:
             logger.info(" TR Predict Method called")
             dictrec = json.loads(self.request.body)
+ 
             timesrec = dictrec.get("times")
 
-            lent = len(dictrec)
-            #dictrec: dizionaroi json in input
+            lent = len(timesrec)
+            #riempire struttura json con dati recuperati
+            ##
+            f = open ('./TRPredictRequestA.json', "r")
+            #Costruzione json da inviare a API Rebecca per la predict
+            #oppure è il cihamante che ci passa questa struttura
+            jsonreq = json.load(f)
+            print(jsonreq.keys())
+            #dict_keys(['predictive_model_id', 'data', 'times', 'orient'])
+            data = jsonreq.get("data")
+            #dict_keys(['temperature', 'solar_radiation_0', 'solar_radiation_30', 'pressure', 'precipitation', 'cloud_cover', 'ghi', 'dhi', 'dni', 'wind_speed', 'wind_direction', 'H', 'L', '
             data_rec = dictrec.get("data", NaN)
             l = len(data_rec)
-            #creare DataFrame a partire da Dictrect
-
-            #df = pd.DataFrame(data=None, columns=['Temperature_A', 'Temperature_B', 'Temperature_C','Temperature_D','hour', 'time' ], index = data_rec['time'].values())
-            df = pd.DataFrame(data=None, columns=['Temperature_A', 'Temperature_B', 'Temperature_C','Temperature_D','hour', 'time' ])
-            dla = []
-            dlb = []
-            dlc = []
-            dld = []
-            dlh = []
-            dlt = []
+            #model = jsonreq.get("predictive_model_id")
+            #times = jsonreq.get("times")
+            jsonreq["times"] = timesrec
+            i=0
             for d in data_rec:
+                #print(d.get("temperature", 0))    
+                dr = {}
                 #dr = data[i]
-                dla.append(d["Temperature_A"])
-                dlb.append(d["Temperature_B"])
-                dlc.append(d["Temperature_C"])
-                dld.append(d["Temperature_D"])
-                dlh.append(d["hour"])
-                dlt.append(d["time"]) 
-            dct = {}
-            dct['Temperature_A'] = dla
-            dct['Temperature_B'] = dlb
-            dct['Temperature_C'] = dlc
-            dct['Temperature_D'] = dld
-            dct['hour'] = dlh
-            dct['time'] = dlt
-            
-            df = pd.DataFrame(data=dct, columns=['Temperature_A', 'Temperature_B', 'Temperature_C','Temperature_D','hour', 'time' ])
+                #dr['Temperature_A'] = d["Temperature_A"]
+                dr['Temperature_B'] = d["Temperature_B"]
+                dr['Temperature_C'] = d["Temperature_C"]
+                dr['Temperature_D'] = d["Temperature_D"]
+                dr['hour'] = d["hour"]
 
-            types_dict = {'Temperature_A': float,'Temperature_B': float, 'Temperature_C': float, 'Temperature_D': float, 'hour': int, 'time': str}
-            for col, col_type in types_dict.items():
-                df[col] = df[col].astype(col_type)
-            df['time']= pd.to_datetime(df['time']).sort_values()
-            df.index = df['time']
-            logger.debug("Row number to process: %d" % l)
-            logger.debug("Start Train + Predict")
-            df = df.drop(['time'], axis = 1) 
-            dict_modelli = dizionario_modelli(df, 0.3)
-            dfres = tabella(dict_modelli,df)
-            #train_predict(df,perc_train = 0.334)
-            logger.debug("Stop Train + Predict")
+                if (i > 0):
+                    data.append(dr) 
+                else:
+                    data[i] = dr
+                i+=1
+            jsonreq["data"] = data
+            print("json di risposta: " + json.dumps(jsonreq))
+            logger.debug("Json da inviare:" + json.dumps(jsonreq))
+            #else:
+
+            resp = self.postPredictRequest(jsonreq)
+            #prima risposta (modello predizione tempA)
+            self.write(json.dumps(resp))
+
+            #Modello Predizione Temp B
+            f = open ('./TRPredictRequestB.json', "r")
+            #Costruzione json da inviare a API Rebecca per la predict
+            #oppure è il cihamante che ci passa questa struttura
+            jsonreq = json.load(f)
+            print(jsonreq.keys())
+            #dict_keys(['predictive_model_id', 'data', 'times', 'orient'])
+            data = jsonreq.get("data")
+            #dict_keys(['temperature', 'solar_radiation_0', 'solar_radiation_30', 'pressure', 'precipitation', 'cloud_cover', 'ghi', 'dhi', 'dni', 'wind_speed', 'wind_direction', 'H', 'L', '
+            data_rec = dictrec.get("data", NaN)
+            l = len(data_rec)
+            #model = jsonreq.get("predictive_model_id")
+            #times = jsonreq.get("times")
+            jsonreq["times"] = timesrec
+            i=0
+            for d in data_rec:
+                #print(d.get("temperature", 0))    
+                dr = {}
+                #dr = data[i]
+                dr['Temperature_A'] = d["Temperature_A"]
+                #dr['Temperature_B'] = d["Temperature_B"]
+                dr['Temperature_C'] = d["Temperature_C"]
+                dr['Temperature_D'] = d["Temperature_D"]
+                dr['hour'] = d["hour"]
+
+                if (i > 0):
+                    data.append(dr) 
+                else:
+                    data[i] = dr
+                i+=1
+            jsonreq["data"] = data
+            print("json di risposta: " + json.dumps(jsonreq))
+            logger.debug("Json da inviare:" + json.dumps(jsonreq))
+            #else:
+
+            resp = self.postPredictRequest(jsonreq)
+            #seconda risposta (modello predizione tempB)
+            self.write(json.dumps(resp))
+
+            #preparare DataFrame completo con le 2 predizioni 
+
             
 
         except web.HTTPError as why:

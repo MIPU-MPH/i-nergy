@@ -8,7 +8,6 @@ from logging import getLogger
 import json
 from ConfigParam import ConfigParam
 from MiddleLayerView import MiddleLayerView
-from TrainView import TrainView
 from TRPredictView import TRPredictView
 import logging
 from logging import getLogger
