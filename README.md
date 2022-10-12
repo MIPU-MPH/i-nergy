@@ -17,3 +17,7 @@ The repo in structuerd as follows:
         Synthetic Dataset Creation: contains the synthetic dataset as well as the code used to create the dataset. 
 
         AIOD solution for anomaly detection: contains an executable linked to MIPU's platform Rebecca, and based on the data provided provides the real vs. predicted timetrend and csv. 
+        
+        
+        
+#MIDDLEWARE tools
