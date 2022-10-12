@@ -18,22 +18,26 @@ from ConfigParam import ConfigParam
 from modello.funzioni2 import train_predict
 from modello.funzioni2 import dizionario_modelli
 from modello.funzioni2 import tabella
-
-#Verificare come rendere parametrici in un file
-PROT = "https"
-HOST = "training.rebecca.mipu.eu"
-API_POST = "api/targeting/multiai/v1/predictive_model/predict/"
-#Credenziali Rebecca
-USER = 'api_user'   # !!!!!!!!!!!!!!!!!!!!!! da cryptare
-PWD = 'platoon#2022'  # !!!!!!!!!!!!!!!!!!!!!! da cryptare
-
+import pandas_bokeh
+from bokeh.plotting import figure
+import time
+from PIL import Image, ImageDraw
+import io
 
 logger=getLogger('middlelayer')
-#Credenziali Middleware
+#Middleware credentials for Basic Auth
 credentials = {
     'user1': 'pass1',
     'user-inergy': 'pass1',
 }
+
+class DataObject:
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+    def toJSONFile(self, nomefile):
+        with open(nomefile, 'w', encoding='utf-8') as f:
+            json.dump(self, f, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 class TRPredictView(BaseView):
 
@@ -49,13 +53,14 @@ class TRPredictView(BaseView):
 
     def get_authenticated_user(self, check_credentials_func, realm):
         try:
+            print('Auth')
             return self.authenticate_user(check_credentials_func, realm)
         except self.SendChallenge:
             self.send_auth_challenge(realm)
 
             
     def authenticate_user(self, check_credentials_func, realm):
-        #print('Authorization')
+        print('Authorization')
         auth_header = self.request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Basic '):
             raise self.SendChallenge()
@@ -80,41 +85,31 @@ class TRPredictView(BaseView):
         logger.debug('Logged user:' + self.current_user)
         return self.get_secure_cookie("user")
 
-    def postPredictRequest(self, jsonreq):
-
-        logger.debug('Post Predict: ')
-        try:
-            jsonresp=""
-            conf = ConfigParam()
-            api_url = conf.getProtocol() +'://' + conf.getHost() + '/' + conf.getApiPredict()  #PROT + '://'+HOST+'/'+API_POST
-            logger.debug('URL: ' + api_url)
-            print('URL: ' + api_url)
-            #Eventuale parametro
-            logger.debug('Json to pass: ' + json.dumps(jsonreq))
-            headers =  {"Content-Type":"application/json"}
-            #how to pass json ?
-            user,pwd = conf.getUserApiRebecca()
-            response = requests.post(api_url, auth=HTTPBasicAuth(user, pwd), headers=headers, data = json.dumps(jsonreq))
-            #response.raise_for_status()
-            logger.debug(response.json())
-            logger.info(response.status_code)
-            #print(response.headers)
-            jsonresp = response.json()
-            return jsonresp
-
-        except HTTPError as http_err:
-            logger.error(f'HTTP error occurred: {http_err}')
-            return jsonresp
-        except Exception as err:
-            logger.error(f'Other error occurred: {err}')
-            return jsonresp
-
     @auth_required(realm='Protected', auth_func=credentials.get)
     def _get(self, *args, **kwargs):
         logger.debug('Hello %s' % self._current_user)
         try:
             print('Get Method: not supported')
-            self.write(json.dumps("Get Method: not Supported"))
+            filename = "./Web/image.png"
+#open image
+            f = Image.open(filename)
+            #generate Image
+            image = Image.new("RGB", (300, 50))
+            draw = ImageDraw.Draw(image)
+            draw.text((0, 0), "create_images ")
+            o = io.BytesIO()
+            image.save(o, 'JPEG')
+
+            #store image in reply
+            o.seek(0)
+            f.save(o, format="JPEG")
+            s = o.getvalue()
+            self.set_header('Content-type', 'image/jpg')
+            self.set_header('Content-length', len(s))
+            self.write(s)
+
+
+            #self.flush()
             return True
         except web.HTTPError as why:
             msg = '{}'.format(why)
@@ -146,9 +141,8 @@ class TRPredictView(BaseView):
             #dictrec: dizionaroi json in input
             data_rec = dictrec.get("data", NaN)
             l = len(data_rec)
-            #creare DataFrame a partire da Dictrect
+            #create  DataFrame starting from dictionary reda from input json
 
-            #df = pd.DataFrame(data=None, columns=['Temperature_A', 'Temperature_B', 'Temperature_C','Temperature_D','hour', 'time' ], index = data_rec['time'].values())
             df = pd.DataFrame(data=None, columns=['Temperature_A', 'Temperature_B', 'Temperature_C','Temperature_D','hour', 'time' ])
             dla = []
             dlb = []
@@ -184,10 +178,43 @@ class TRPredictView(BaseView):
             df = df.drop(['time'], axis = 1) 
             dict_modelli = dizionario_modelli(df, 0.3)
             dfres = tabella(dict_modelli,df)
+            #output = DataObject()
+            outputdict = DataObject()
+           
             #train_predict(df,perc_train = 0.334)
             logger.debug("Stop Train + Predict")
-            
+            jsonres = dfres.to_json(orient = 'records' ) 
+            #self.write(json.dumps(jsonres))
+            logger.debug("End  Post call: train+Pred")
 
+            #TODO: aggiungere timestamps al nome
+            #TODO: aggiungere path al json
+            time_stamp = time.time()
+            nomefileA = "./Web/outputA_" + str(time_stamp) +".html"
+            nomefileB = "./Web/outputB_" + str(time_stamp) +".html"
+            nomefileC = "./Web/outputC_" + str(time_stamp) +".html"
+            nomefileD = "./Web/outputD_" + str(time_stamp) +".html"
+            outputdict.WebOutputTempA =nomefileA
+            outputdict.WebOutputTempB =nomefileB
+            outputdict.WebOutputTempC =nomefileC
+            outputdict.WebOutputTempD =nomefileD
+            outputdict.Results =  {}
+            outputdict.Results = dfres.to_dict(orient = 'records')  #{dfres.to_json(orient = 'records' )}
+            outputdict.WebOutput = {}
+            pandas_bokeh.output_file(nomefileA)
+            cols = [ 'Temperature_A', 'Temperature_A_pred', 'Temperature_A Alert semplice', 'Temperature_A Alert strutturale', 'ALERT INTENSITY']
+            dfres[cols].plot_bokeh(kind='line', 
+                figsize =(1500,600),
+                colormap = ['green', 'blue', 'orange', 'red', 'purple' ],
+                rangetool=True) 
+            pandas_bokeh.output_file(nomefileB)
+            cols = [ 'Temperature_B', 'Temperature_B_pred', 'Temperature_B Alert semplice', 'Temperature_B Alert strutturale', 'ALERT INTENSITY']
+            dfres[cols].plot_bokeh(kind='line', 
+                figsize =(1500,600),
+                colormap = ['green', 'blue', 'orange', 'red', 'purple' ],
+                rangetool=True) 
+            #self.write(json.dumps(outputdict))
+            self.write(outputdict.toJSON())
         except web.HTTPError as why:
             msg = '{}'.format(why)
             self.logger.warning(msg)
@@ -202,6 +229,7 @@ class TRPredictView(BaseView):
                 why,
                 )
             logger.error(excmsg)
+            print(excmsg)
             self.send_error()
             return False
     

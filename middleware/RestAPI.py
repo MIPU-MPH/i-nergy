@@ -27,14 +27,11 @@ from tornado_http_auth import DigestAuthMixin, BasicAuthMixin, auth_required
 
 items = []
 logger=getLogger('middlelayer')
-PORT='8889'
 
 
 def make_app():
     urls = [
-        #("/api/predict/([^/]+)", MiddleLayerView),
         ("/inergy/api/v1/TR_mtbt/predict/", TRPredictView)
-       # ("/inergy/api/v1/TR_mtbt/train/", TRTrainView)
         ]
     return Application(urls, debug=True)
 
@@ -49,9 +46,10 @@ if __name__ == "__main__":
     logger.info("Mipu Middleware: Start Tornado Loop")
     conf = ConfigParam()
     PORT = conf.getport()
+    print("Listening to port: " + str(PORT))
     app = make_app()
     app.listen(PORT)
-    print('Mipu Middleware: Start Tornado loop')
+    print('I-Nergy Middleware: Start Tornado loop')
     IOLoop.current().start()
 
 
