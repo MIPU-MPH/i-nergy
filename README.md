@@ -21,17 +21,17 @@ The repo in structuerd as follows:
         
         
 #MIDDLEWARE tools
-The middleware tool, is a Web Server based on python Tornado framework, that includes the AI algorithm  based on syntethic data, and the method usefule to train and predict data by user that are able to provide transfomer temperature data.
-The middleware expose an API Rest in order to give the user the possibility to train model based on owen data and to get the predictione data.
-Following are the instruuctions to recall such method in (POST) via for example Insomnia client or ostman client:
+
+The middleware tool, is a Web Server based on python Tornado framework, that includes the AI algorithm  based on syntethic data, and the method usefull to train and predict data by user that are able to provide transfomer temperature data.
+The middleware expose an API Rest in order to give to a user or a third party the possibility to train model based on own data and  get the predictions one.
+Following are the instruuctions to recall such method in (POST) via for example Insomnia client or postman client:
 URL:
 https://<localhost or remote server pc>:8889/inergy/api/v1/TR_mtbt/predict/
-in the body you have to include the json (json_I-nergy.json)
+in the body you have to include the json (json_I-nergy.json is an example)
 
 INSTRUCTION TO BUILD THE CONTAINER WITH DOCKER in a Linux PC or server:
 - Download the directory Script
 - Go to directory where you stored the code
-- Docker build: sudo docker build -t mipu_inergymiddleware_img:latest .
-- Docker run: sudo docker run -it -p 8889:8889 --name=Mipu_inergymiddleware_instance mipu_inergymiddleware_img
-    in order to start the container in intercative mode
+- To build the Docker container: sudo docker build -t mipu_inergymiddleware_img:latest .
+- To run an interactive docker instance: sudo docker run -it -p 8889:8889 --name=Mipu_inergymiddleware_instance mipu_inergymiddleware_img
 - sudo docker start Mipu_inergymiddleware_instance in order to start the container in backgroound mode
