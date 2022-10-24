@@ -27,13 +27,13 @@ The repo in structuerd as follows:
         AIOD solution for anomaly detection: contains an executable linked to MIPU's platform Rebecca, and based on the data provided provides the real vs. predicted timetrend and csv. 
         
         
-#MIDDLEWARE tools
+# MIDDLEWARE tools
 
 The middleware tool, is a Web Server based on python Tornado framework, that includes the AI algorithm  based on syntethic data, and the methods usefull to train and predict data by user that are able to provide transfomer temperature data.
 The middleware expose some  API Rest methods in order to give to a user or a third party the possibility to train model based on own data and  get the predictions one.
 API Rest Methods exposed are the following:
 
-##TRAIN AND PREDICT
+## TRAIN AND PREDICT
     This method docen't save the data passed and the model, train the data and give predistion values based on train set.
     http://<local host>:8889/inergy/api/v1/TR_mtbt/TrainAndPredict/
     - In the body, spcify the 4 Temperatires data in a json format:
