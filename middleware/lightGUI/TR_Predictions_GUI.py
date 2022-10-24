@@ -98,7 +98,7 @@ if __name__ == '__main__':
         df = Richiesta[1]
         output_file("./ts_TRPrediction.html")
         # title = "Transformer Predictions: " + df['time'].min() + " - "+  df['time'].max()
-
+   
         """ l'intenzione è quella di generare 4 grafici, ognuno sarebbe il pred vs real di una specifica Temperatura"""
         columns = []
         for col in df_0[df_0.columns[:-2]]:
