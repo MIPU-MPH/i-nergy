@@ -123,11 +123,11 @@ API Rest Methods exposed are the following:
 - Download the directory Script
 - Go to directory where you stored the code
 - To build the Docker container: 
-- 	sudo docker build -t mipu_inergymiddleware_img:latest .
+	- sudo docker build -t mipu_inergymiddleware_img:latest .
 - To run an interactive docker instance: 
-- 	sudo docker run -it -p 8889:8889 --name=Mipu_inergymiddleware_instance mipu_inergymiddleware_img
+	- sudo docker run -it -p 8889:8889 --name=Mipu_inergymiddleware_instance mipu_inergymiddleware_img
 - To start the container in background mode:
-- 	sudo docker start Mipu_inergymiddleware_instance
+	- sudo docker start Mipu_inergymiddleware_instance
 
 
 ## LIGHT GUI
