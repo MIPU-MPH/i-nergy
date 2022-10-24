@@ -1,0 +1,13 @@
+{
+    "predictive_model_id": 184,
+    "data": [
+        {
+            "Temperature_D": 40,
+            "Temperature_B": 1,
+            "Temperature_C": 1,
+            "hour": 1
+        }
+    ],
+    "times": ["2022-09-30"],
+    "orient": "columns"
+}
