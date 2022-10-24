@@ -139,7 +139,7 @@ def codice(df,perc_train = 0.6):
                 pickle.dump(dict_modelli,tf)
 
     return(codice)
-
+ 
 def tabella_output(df2, codice):
 
     path = "./Pickle/"+ codice
