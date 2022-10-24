@@ -76,7 +76,14 @@ API Rest Methods exposed are the following:
          }
 ## TRAIN METHOD 
     POST METHOD: http://<local host>:8889/inergy/api/v1/TR_mtbt/train/
-    {"data": [{"Temperature_B": 77.9897290650309, "Temperature_D": 94.43668658735491, "Temperature_A": 57.62743004178479, "Temperature_C": 59.52237237448914, "hour": 0, "time": "2022-08-13 00:00:00"}, 
+    Body of the call (example)
+    {"data": [{"Temperature_B": 77.9897290650309, "Temperature_D": 94.43668658735491, "Temperature_A": 57.62743004178479, "Temperature_C": 59.52237237448914, "hour": 			0, "time": "2022-08-13 00:00:00"}
+	]
+    }
+    OUTPUT: is the model's code to identify trained algorithm in next predict calls:
+	{
+		"ModelCode": "MIPU_transformer_model_1666617526"
+	}
     
 ## PREDICT METHOD
     POST METHOD:  http://localhost:8889/inergy/api/v1/TR_mtbt/predict/
@@ -105,14 +112,11 @@ API Rest Methods exposed are the following:
 			"Temperature_D Alert strutturale": 0,
 			"Temperature_D_pred": 74.38961180632032,
 			"hour": 0
-		},
+		}
+	]
+	}
     
-Following are the instruuctions to recall such method in (POST) via for example Insomnia client or postman client:
-URL:
-https://<localhost or remote server pc>:8889/inergy/api/v1/TR_mtbt/predict/
-in the body you have to include the json (json_I-nergy.json is an example)
-
-INSTRUCTION TO BUILD THE CONTAINER WITH DOCKER in a Linux PC or server:
+## INSTRUCTION TO BUILD THE CONTAINER WITH DOCKER in a Linux PC or server:
 - Download the directory Script
 - Go to directory where you stored the code
 - To build the Docker container: sudo docker build -t mipu_inergymiddleware_img:latest .
