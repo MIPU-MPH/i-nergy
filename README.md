@@ -18,17 +18,20 @@ ________________________________________________________________________________
 
 The user can provide 4 different temperatures and the hour at which the temperature was collected, and the software will give as a result the real vs. predicted graph for the four temperatures, and the predictions for each temperature.
 
-## REPO STRUCTURE
+### REPO STRUCTURE
 The repo in structured as follows:
 
     Main: all folders
 
-        Dataset Analysis: contains code used to do EDA on transformer 
-
-        Synthetic Dataset Creation: contains the synthetic dataset as well as the code used to create the dataset. 
-
-        Middleware: AIOD solution for anomaly detection: contains an executable linked to MIPU's platform Rebecca, and based on the data provided provides the real vs. 	predicted timetrend and csv. 
-        
+        - Dataset Analysis:
+        - Synthetic Dataset Creation
+        - Middleware
+	
+ # Dataset Analysis
+ Contains code used to do EDA on transformer 
+ 
+ # Syntethic DataSet
+ Contains the synthetic dataset as well as the code used to create the dataset. 
         
 # MIDDLEWARE tools
 
