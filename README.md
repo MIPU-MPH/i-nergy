@@ -12,6 +12,8 @@ This reporitory contains the code used to provide AI assets in the AIOD platform
 The main deliverable is a set of tools built with the scope to provide an anomaly detection model for transformers. 
 
 The solution, can be accessed through a docker solution that includes a web server where a specific proprietary function runs and creates the anomaly identification. The output is a CSV file containing the real vs. predicted values, the alarms identified, and an interactive plot inspired by the standard output or Rebecca proprietary platform.
+
+> "This project has received funding from the European Union's Horizon 2020 research and innovation programme within the framework of the I-NERGY Project, funded under grant agreement No 101016508"
 _________________________________________________________________________________________
 
 The user can provide 4 different temperatures and the hour at which the temperature was collected, and the software will give as a result the real vs. predicted graph for the four temperatures, and the predictions for each temperature.
