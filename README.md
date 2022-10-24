@@ -124,3 +124,8 @@ API Rest Methods exposed are the following:
 - To build the Docker container: sudo docker build -t mipu_inergymiddleware_img:latest .
 - To run an interactive docker instance: sudo docker run -it -p 8889:8889 --name=Mipu_inergymiddleware_instance mipu_inergymiddleware_img
 - sudo docker start Mipu_inergymiddleware_instance in order to start the container in backgroound mode
+
+
+## LIGHT GUI
+	the folder Light GUI contains an exampled code the calls the API exposed by the middleware, passing data read from a csv file and displayng predicted data on a chart.
+	It's a python script, to call with the following command: python TR_predictions_GUI.py
