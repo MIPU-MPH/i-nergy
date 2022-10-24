@@ -1,6 +1,7 @@
 # I-Nergy | AI for Energy
 # Maintenet solution for predictive maintenance on transformers
-
+> "This project has received funding from the European Union's Horizon 2020 research and innovation programme within the framework of the I-NERGY Project, funded under grant agreement No 101016508"
+ 
 This repository contains a prototype which has the goal to provide a complete solution with a machine learning algorithm and expert system for the continuous monitoring of the health status of the assets within the distribution network, with focus on transformers. 
 The analytical pipeline consists of a preprocessing of the data provided, the training and prediction using a machine learning model, and the post-processing of the prediction in order to identify anomalies in the behaviour.  The prediction system uses winding temperatures and a core temperature to define which observations are anomalous with respect to the general distribution of the temperatures in time.
 
@@ -13,7 +14,6 @@ The main deliverable is a set of tools built with the scope to provide an anomal
 
 The solution, can be accessed through a docker solution that includes a web server where a specific proprietary function runs and creates the anomaly identification. The output is a CSV file containing the real vs. predicted values, the alarms identified, and an interactive plot inspired by the standard output or Rebecca proprietary platform.
 
-> "This project has received funding from the European Union's Horizon 2020 research and innovation programme within the framework of the I-NERGY Project, funded under grant agreement No 101016508"
 _________________________________________________________________________________________
 
 The user can provide 4 different temperatures and the hour at which the temperature was collected, and the software will give as a result the real vs. predicted graph for the four temperatures, and the predictions for each temperature.
