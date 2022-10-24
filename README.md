@@ -34,9 +34,9 @@ The middleware expose some  API Rest methods in order to give to a user or a thi
 API Rest Methods exposed are the following:
 
 ## TRAIN AND PREDICT
-    This method docen't save the data passed and the model, train the data and give predistion values based on train set.
-    http://<local host>:8889/inergy/api/v1/TR_mtbt/TrainAndPredict/
-    - In the body, spcify the 4 Temperatires data in a json format:
+    This method doesn't save the data passed and the model, train the data and give predistion values based on train set.
+    POST METHOD:  http://<local host>:8889/inergy/api/v1/TR_mtbt/TrainAndPredict/
+    - In the body, specify the 4 Temperatires data in a json format:
         {"data": 
             [
                     {"Temperature_B": 77.9897290650309, 
@@ -48,8 +48,63 @@ API Rest Methods exposed are the following:
                     }
             ]
         }
-    - Use Basic Auth
-
+    - Uses Basic Auth (user1, pass1)
+    return a json with predicted values:
+        {
+        "Results": [
+            {
+                "Temperature_A": 57.62743004178479,
+                "Temperature_A Alert semplice": 0,
+                "Temperature_A Alert strutturale": 0,
+                "Temperature_A_pred": 75.73596654323161,
+                "Temperature_B": 77.9897290650309,
+                "Temperature_B Alert semplice": 0,
+                "Temperature_B Alert strutturale": 0,
+                "Temperature_B_pred": 79.56667994703176,
+                "Temperature_C": 59.52237237448914,
+                "Temperature_C Alert semplice": 0,
+                "Temperature_C Alert strutturale": 0,
+                "Temperature_C_pred": 69.31261444091797,
+                "Temperature_D": 94.43668658735491,
+                "Temperature_D Alert semplice": 0,
+                "Temperature_D Alert strutturale": 0,
+                "Temperature_D_pred": 74.38961180632032,
+                "hour": 0
+            }
+         }
+## TRAIN METHOD 
+    POST METHOD: http://<local host>:8889/inergy/api/v1/TR_mtbt/train/
+    {"data": [{"Temperature_B": 77.9897290650309, "Temperature_D": 94.43668658735491, "Temperature_A": 57.62743004178479, "Temperature_C": 59.52237237448914, "hour": 0, "time": "2022-08-13 00:00:00"}, 
+    
+## PREDICT METHOD
+    POST METHOD:  http://localhost:8889/inergy/api/v1/TR_mtbt/predict/
+     - In the body, specify the 4 Temperatures data in a json format, and the code to identify the model to use in the prediction (the id returned by a previuos train  call:
+      {"data": [{"Temperature_B": 77.9897290650309, "Temperature_D": 94.43668658735491, "Temperature_A": 57.62743004178479, "Temperature_C": 59.52237237448914, "hour":             0, "time": "2022-08-13 00:00:00"}, 
+        "codice": "MIPU_transformer_model_1666602245"}
+    
+    Json output:
+    {
+	"Results": [
+		{
+			"Temperature_A": 57.62743004178479,
+			"Temperature_A Alert semplice": 0,
+			"Temperature_A Alert strutturale": 0,
+			"Temperature_A_pred": 75.73596654323161,
+			"Temperature_B": 77.9897290650309,
+			"Temperature_B Alert semplice": 0,
+			"Temperature_B Alert strutturale": 0,
+			"Temperature_B_pred": 79.56667994703176,
+			"Temperature_C": 59.52237237448914,
+			"Temperature_C Alert semplice": 0,
+			"Temperature_C Alert strutturale": 0,
+			"Temperature_C_pred": 69.31261444091797,
+			"Temperature_D": 94.43668658735491,
+			"Temperature_D Alert semplice": 0,
+			"Temperature_D Alert strutturale": 0,
+			"Temperature_D_pred": 74.38961180632032,
+			"hour": 0
+		},
+    
 Following are the instruuctions to recall such method in (POST) via for example Insomnia client or postman client:
 URL:
 https://<localhost or remote server pc>:8889/inergy/api/v1/TR_mtbt/predict/
