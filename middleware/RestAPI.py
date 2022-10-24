@@ -9,6 +9,8 @@ import json
 from ConfigParam import ConfigParam
 from MiddleLayerView import MiddleLayerView
 from TRPredictView import TRPredictView
+from TRTrainAndPredictView import TRTrainAndPredictView
+from TRTrainView import TRTrainView
 import logging
 from logging import getLogger
 import datetime
@@ -31,7 +33,9 @@ logger=getLogger('middlelayer')
 
 def make_app():
     urls = [
-        ("/inergy/api/v1/TR_mtbt/predict/", TRPredictView)
+        ("/inergy/api/v1/TR_mtbt/TrainAndPredict/", TRTrainAndPredictView),
+        ("/inergy/api/v1/TR_mtbt/predict/", TRPredictView),
+         ("/inergy/api/v1/TR_mtbt/train/", TRTrainView)
         ]
     return Application(urls, debug=True)
 

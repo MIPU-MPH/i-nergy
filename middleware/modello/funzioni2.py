@@ -127,18 +127,19 @@ def tabella(dict_modelli,df):
 
     for T in df.columns[:-1]:
         sigma = dict_modelli[T]['sigma']
-        Rolling_mean = df[T].rolling(6).mean()
-        Tab[f'{T} Alert strutturale'] = [ 1 if roll > sigma else 0 for roll in Rolling_mean]
+        Rolling_mean = Tab[f'{T}_residual'].rolling(6).mean()
+        Tab[f'{T} Alert strutturale'] = [ 1 if roll > 2 * sigma else 0 for roll in Rolling_mean ]
     
     Tab['ALERT INTENSITY'] = Tab[Tab.columns[-4:]].sum(axis = 1)
+    Tab['time'] = Tab.index
     return (Tab)
 
 
     
 def train_predict(df, perc_train):
     dict_modelli = dizionario_modelli(df,perc_train)
-    tabella(dict_modelli,df)
-    return(tabella)
+    return(tabella(dict_modelli,df))
 
 
 
+x = 2

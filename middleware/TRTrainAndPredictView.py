@@ -18,7 +18,6 @@ from ConfigParam import ConfigParam
 from modello.funzioni2 import train_predict
 from modello.funzioni2 import dizionario_modelli
 from modello.funzioni2 import tabella
-from modello.seconda_funzione import tabella_output #metodo per predict
 import pandas_bokeh
 from bokeh.plotting import figure
 import time
@@ -40,7 +39,7 @@ class DataObject:
         with open(nomefile, 'w', encoding='utf-8') as f:
             json.dump(self, f, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
-class TRPredictView(BaseView):
+class TRTrainAndPredictView(BaseView):
 
     class SendChallenge(Exception):
         pass
@@ -141,7 +140,6 @@ class TRPredictView(BaseView):
             lent = len(dictrec)
             #dictrec: dizionaroi json in input
             data_rec = dictrec.get("data", NaN)
-            codice = dictrec.get("codice", NaN)
             l = len(data_rec)
             #create  DataFrame starting from dictionary reda from input json
 
@@ -178,19 +176,19 @@ class TRPredictView(BaseView):
             logger.debug("Row number to process: %d" % l)
             logger.debug("Start Train + Predict")
             df = df.drop(['time'], axis = 1) 
-            dfres = tabella_output(df, codice)
-
+            dict_modelli = dizionario_modelli(df, 0.3)
+            dfres = tabella(dict_modelli,df)
             #output = DataObject()
             outputdict = DataObject()
            
             #train_predict(df,perc_train = 0.334)
-            logger.debug("Stop  Predict")
+            logger.debug("Stop Train + Predict")
             jsonres = dfres.to_json(orient = 'records' ) 
             #self.write(json.dumps(jsonres))
-            logger.debug("End  Post call: Predict with code:" + codice)
+            logger.debug("End  Post call: train+Pred")
 
-            outputdict.Results =  {}
-            outputdict.Results = dfres.to_dict(orient = 'records')  #{dfres.to_json(orient = 'records' )}
+           
+            #self.write(json.dumps(outputdict))
             self.write(outputdict.toJSON())
         except web.HTTPError as why:
             msg = '{}'.format(why)

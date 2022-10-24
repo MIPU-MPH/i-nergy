@@ -18,7 +18,7 @@ from ConfigParam import ConfigParam
 from modello.funzioni2 import train_predict
 from modello.funzioni2 import dizionario_modelli
 from modello.funzioni2 import tabella
-from modello.seconda_funzione import tabella_output #metodo per predict
+from modello.seconda_funzione import codice #metodo per train
 import pandas_bokeh
 from bokeh.plotting import figure
 import time
@@ -40,7 +40,7 @@ class DataObject:
         with open(nomefile, 'w', encoding='utf-8') as f:
             json.dump(self, f, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
-class TRPredictView(BaseView):
+class TRTrainView(BaseView):
 
     class SendChallenge(Exception):
         pass
@@ -128,7 +128,7 @@ class TRPredictView(BaseView):
             self.send_error()
             return False
 
-#APi Post per train + predizione, tramite modello interno
+#APi Post per train, tramite modello interno
     @auth_required(realm='Protected', auth_func=credentials.get)    
     def _post(self, *args, **kwargs):
         logger.info('Hello %s' % self._current_user)
@@ -141,7 +141,6 @@ class TRPredictView(BaseView):
             lent = len(dictrec)
             #dictrec: dizionaroi json in input
             data_rec = dictrec.get("data", NaN)
-            codice = dictrec.get("codice", NaN)
             l = len(data_rec)
             #create  DataFrame starting from dictionary reda from input json
 
@@ -178,19 +177,15 @@ class TRPredictView(BaseView):
             logger.debug("Row number to process: %d" % l)
             logger.debug("Start Train + Predict")
             df = df.drop(['time'], axis = 1) 
-            dfres = tabella_output(df, codice)
-
+            #Train of the model, returns to user the code to identify the model in order to pass it in the predict function for async calls
+            codice_modello = codice(df)
             #output = DataObject()
             outputdict = DataObject()
            
+            outputdict.ModelCode=codice_modello
             #train_predict(df,perc_train = 0.334)
-            logger.debug("Stop  Predict")
-            jsonres = dfres.to_json(orient = 'records' ) 
-            #self.write(json.dumps(jsonres))
-            logger.debug("End  Post call: Predict with code:" + codice)
-
-            outputdict.Results =  {}
-            outputdict.Results = dfres.to_dict(orient = 'records')  #{dfres.to_json(orient = 'records' )}
+            logger.debug("Stop Train")
+            logger.debug("End  Post call: train+Pred")
             self.write(outputdict.toJSON())
         except web.HTTPError as why:
             msg = '{}'.format(why)

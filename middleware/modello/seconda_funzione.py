@@ -134,15 +134,16 @@ def codice(df,perc_train = 0.6):
         dict_modelli[T]['UCL'] = UCL
 
         codice = f'MIPU_transformer_model_{time_stamp}'
-        
-        with open(codice,'wb') as tf :
+        path = "./Pickle/"+ codice
+        with open(path,'wb') as tf :
                 pickle.dump(dict_modelli,tf)
 
     return(codice)
 
 def tabella_output(df2, codice):
 
-    with open(f'{codice}','rb') as tf:
+    path = "./Pickle/"+ codice
+    with open(f'{path}','rb') as tf:
         dict_modello = pickle.load(tf)
 
     TAB = df2.copy()
