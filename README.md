@@ -23,7 +23,7 @@ The repo in structured as follows:
 
     Main: all folders
 
-        - Dataset Analysis:
+        - Dataset Analysis
         - Synthetic Dataset Creation
         - Middleware
 	
