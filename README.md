@@ -20,12 +20,9 @@ The user can provide 4 different temperatures and the hour at which the temperat
 
 ### REPO STRUCTURE
 The repo in structured as follows:
-
-    Main: all folders
-
-        - Dataset Analysis
-        - Synthetic Dataset Creation
-        - Middleware
+- Dataset Analysis
+- Synthetic Dataset Creation
+- Middleware
 	
  # Dataset Analysis
  Contains code used to do EDA on transformer 
