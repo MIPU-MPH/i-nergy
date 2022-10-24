@@ -33,6 +33,8 @@ The repo in structuerd as follows:
 
 The middleware tool, is a Web Server based on python Tornado framework, that includes the AI algorithm  based on syntethic data, and the methods usefull to train and predict data by user that are able to provide transfomer temperature data.
 The middleware expose some  API Rest methods in order to give to a user or a third party the possibility to train model based on own data and  get the predictions one.
+The middleware or API Gateway is built in a docker and released in a docker container (below you can find instruction to build the middleware).
+
 API Rest Methods exposed are the following:
 
 ## TRAIN AND PREDICT
