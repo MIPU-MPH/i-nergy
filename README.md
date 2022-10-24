@@ -33,8 +33,22 @@ The middleware tool, is a Web Server based on python Tornado framework, that inc
 The middleware expose some  API Rest methods in order to give to a user or a third party the possibility to train model based on own data and  get the predictions one.
 API Rest Methods exposed are the following:
 
-http://localhost:8889/inergy/api/v1/TR_mtbt/TrainAndPredict/
-
+##TRAIN AND PREDICT
+    This method docen't save the data passed and the model, train the data and give predistion values based on train set.
+    http://<local host>:8889/inergy/api/v1/TR_mtbt/TrainAndPredict/
+    - In the body, spcify the 4 Temperatires data in a json format:
+        {"data": 
+            [
+                    {"Temperature_B": 77.9897290650309, 
+                     "Temperature_D": 94.43668658735491, 
+                     "Temperature_A": 57.62743004178479, 
+                     "Temperature_C": 59.52237237448914, 
+                     "hour": 0, 
+                     "time": "2022-08-13 00:00:00"
+                    }
+            ]
+        }
+    - Use Basic Auth
 
 Following are the instruuctions to recall such method in (POST) via for example Insomnia client or postman client:
 URL:
