@@ -134,6 +134,10 @@ API Rest Methods exposed are the following:
 the folder Light GUI contains an exampled code the calls the API exposed by the middleware, passing data read from a csv file and displayng predicted data on a chart.
 It's a python script, to call with the following command: python TR_predictions_GUI.py
 
+## EXAMPLE WEBAPP
+At the following url, you can find an example of a Webapp, calling our API Rest method from a platform where we have installed the docker container that exposes the APIs:
+	https://mipu-energy-data-i-nergy-client-i-nergy-app-1osvd2.streamlitapp.com/
+
 ## LICENSE
 
 This project is licensed under the terms of the GNU GPLv3 license.
